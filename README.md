@@ -186,7 +186,7 @@ Plot of Training vs Validation Loss:
 </p>
 
 ### LSTM
-Recurrent neural networks, such as Long Short-Term Memory are specifically designed to support sequences of input data. and since we have a sequence input, we convert the input into indices and feed it to the model. We get an accuracy of 80 and f1 score of 0.7969. Below is the architecture used.
+Recurrent neural networks, such as Long Short-Term Memory are specifically designed to support sequences of input data. and since we have a sequence input, we convert the input into indices and feed it to the model. We get an accuracy of 95.8 and f1 score of 0.9576. Below is the architecture used.
 ```
 Layer (type)                 Output Shape              Param #   
 =================================================================
