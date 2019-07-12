@@ -72,7 +72,9 @@ Description of fields: -
 
 ### Performance Metric 
 
-Metric(s): F1 Score
+Metric(s):  Micro F1 score, Accuracy
+
+source : [Mean F Score](https://www.kaggle.com/wiki/MeanFScore/history/120331)
 
 F1-score is the harmonic mean of precision and recall.
 
@@ -108,7 +110,7 @@ We can see that the average length of sequence is around 200
   <img src="Images/5.png" width="500" title="Train Distibution">
 </p>
 
-We consider only 5500 classes as it covers almost 80% of the data and also to reduce computation time
+We consider only 1000 classes as it covers almost 40% of the data and also to reduce computation time
 We can see that the average length of sequence is around 200
 
 
@@ -116,7 +118,7 @@ We can see that the average length of sequence is around 200
 ## Data Preprocessing
 
 We First check for duplicate and null values and remove them from all train, test and dev dataset.
-We consider only most common 5500 classes as it covers 80% of the total train dataset, for dev and test data 80% of the data is covered  by 4500 classes. We use this data for processing.
+TO reduce the computation time, we consider only most common 1000 classes as it covers 40% of the total train dataset, for dev and test data 40% of the data is covered  by 800 classes. We use this data for processing.
 
 We use the below function to get the reduced data
 ```
@@ -127,6 +129,7 @@ We label encode the output classes and then onehotencode the output.
 ```
 def encode():
 ```
+
 
 The sequence contains only first letter of amino acid.We convert it into 3 letter representation and seperate it with a space.
 Below is the chart.
@@ -145,37 +148,61 @@ The input looks like this.
  'Met Ser Val Val Gly Ala Leu Arg Gly His Arg Lys Ala Ile Met Cys Leu Ala Val Ala Ser Asp Leu Val Leu Ser Gly Ser Ala Asp Lys Ser Leu Arg Val Trp Arg']
  ```
 
-## Featurization
-
-### BoW
-We featurize the preprocessed sequence using BoW. Since we need the sequence information we only use Bigram and trigram featurization.
-
-### TFIDF
-TFIDF gives more importance to the unique words and hence we used a bigram TFIDF featurization.
-
 ## Deep Learning Models
 
+### ProtCNN 
+
+We will one hot encode the input sequence into L* 20 array such that each column represents one hot encoding of each amino acid and padding with zeroes, where L is the maximum length of the sequence. To reduce the computation time we take 100 as the max length.
+Now the input contains 439,493 lists with each list containing 100* 20 shaped list corresponding to output variable.
+
+<p align="center">
+  <img src="Images/Arch (2).jpg" width="400" title="Train Distibution">
+</p>
+
+We Implement the ProtCNN model given in the paper - [Using Deep Learning to Annotate the Protein Universe
+(https://www.biorxiv.org/content/10.1101/626507v2.full)
+The ProtCNN networks uses ResNets. ResNets have an advantage that even on increasing the layers we dont get negative outcome and have higher accuracy with increasing depth. Below Fig. depicts the ResNet architecture, which includes dilated convolutions.
+
+<p align="center">
+  <img src="Images/Arch (3).jpg" width="400" title="Train Distibution">
+</p>
+
+Below is the architecture graph:
+
+<p align="center">
+  <img src="Images/ProtCNN.png" width="600" height=300 title="Train Distibution">
+</p>
+
+We have used a single ProtCNN model since it gave the best F1 score. We get an accuracy of 98. and f1 score of 0.987.
+
+Plot of Training vs Validation Loss:
+<p align="center">
+  <img src="Images/onehot_lossplot.png" width="400" title="Train Distibution">
+</p>
+
 ### MLP 
-We use simple 2 Layered neural network with BatchNormalisation and a dropout of 0.2. We use ReLu as activation function. We used early stopping to reduce overfitting and save the model. We feed the bigram and trigram BoW and TFIDF input to the model and get best accuracy of 80% and f1 score of 0.7969 on the test test using BoW Trigram. Below is the architecture used.
+
+We use k-mer encoding which is same as BoW representation and we get both bi-gram and tri-gram representation of the sequence.
+We use simple 2 Layered neural network with BatchNormalisation and a dropout of 0.2. We use ReLu as activation function. We used early stopping to reduce overfitting and save the model. We feed the bigram and trigram BoW input to the model and get best accuracy of 93.1% and f1 score of 0.93 on the test test using BoW Trigram. Below is the architecture used.
 
 ```
 _________________________________________________________________
 Layer (type)                 Output Shape              Param #   
 =================================================================
-dense_1 (Dense)              (None, 512)               275456    
+dense_2 (Dense)              (None, 512)               251904    
 _________________________________________________________________
-dense_2 (Dense)              (None, 128)               65664     
+dense_3 (Dense)              (None, 128)               65664     
 _________________________________________________________________
 batch_normalization_1 (Batch (None, 128)               512       
 _________________________________________________________________
 dropout_1 (Dropout)          (None, 128)               0         
 _________________________________________________________________
-dense_3 (Dense)              (None, 64)                8256      
+dense_4 (Dense)              (None, 64)                8256      
 _________________________________________________________________
-dense_4 (Dense)              (None, 5500)              357500    
+dense_5 (Dense)              (None, 1000)              65000     
 =================================================================
-Total params: 707,388
-Trainable params: 707,132
+Total params: 391,336
+Trainable params: 391,080
 Non-trainable params: 256
 _________________________________________________________________
 ```
@@ -186,18 +213,21 @@ Plot of Training vs Validation Loss:
 </p>
 
 ### LSTM
-Recurrent neural networks, such as Long Short-Term Memory are specifically designed to support sequences of input data. and since we have a sequence input, we convert the input into indices and feed it to the model. We get an accuracy of 95.8 and f1 score of 0.9576. Below is the architecture used.
+
+Recurrent neural networks, such as Long Short-Term Memory are specifically designed to support sequences of input data. and since we have a sequence input, we convert the input into indices and feed it to the model. We get an accuracy of 97.3 and f1 score of 0.973. Below is the architecture used.
+
 ```
+_________________________________________________________________
 Layer (type)                 Output Shape              Param #   
 =================================================================
-embedding_2 (Embedding)      (None, 100, 32)           160000    
+embedding_1 (Embedding)      (None, 100, 32)           160000    
 _________________________________________________________________
-lstm_2 (LSTM)                (None, 100)               53200     
+lstm_1 (LSTM)                (None, 100)               53200     
 _________________________________________________________________
-dense_2 (Dense)              (None, 1500)              151500    
+dense_18 (Dense)             (None, 1000)              101000    
 =================================================================
-Total params: 364,700
-Trainable params: 364,700
+Total params: 314,200
+Trainable params: 314,200
 Non-trainable params: 0
 _________________________________________________________________
 ```
@@ -210,5 +240,17 @@ Plot of Training vs Validation Loss:
 ## Results
 
 <p align="center">
-  <img src="Images/results.png" width="700" title="Train ">
+  <img src="Images/result_pfam.png" width="700" title="Train ">
 </p>
+
+### Future Work
+
+ 1. We could use ProtENN model given in the paper which is an ensemble of ProtCNN models.
+ 2. We can use much larger dataset and all the classes.
+
+### References
+
+[Using Deep Learning to Annotate the Protein Universe](https://www.biorxiv.org/content/10.1101/626507v2.full)
+<br>
+[AppliedaiCourse](https://www.appliedaicourse.com/)
+<br>
