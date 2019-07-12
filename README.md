@@ -6,11 +6,9 @@
 
 **3. Data Preprocessing**
 
-**4. Featurization**
+**4. Deep Learning Models**
 
-**5. Deep Learning Models**
-
-**6. Results**
+**5. Results**
 
 ## Introduction
 
@@ -28,7 +26,7 @@ Given the amino acid sequence of the protein domain, predict which class it belo
 
 Sources:
 <br>
-[Kaggle](https://www.kaggle.com/googleai/pfam-seed-random-split)
+[pfam-seed-random-split](https://www.kaggle.com/googleai/pfam-seed-random-split)
 
 ### Data
 
