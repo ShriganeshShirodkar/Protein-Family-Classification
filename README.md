@@ -168,7 +168,7 @@ The ProtCNN networks uses ResNets. ResNets have an advantage that even on increa
 Below is the architecture graph:
 
 <p align="center">
-  <img src="Images/ProtCNN.png" width="600" height=300 title="Train Distibution">
+  <img src="Images/ProtCNN.png" width="600" height="400" title="Train Distibution">
 </p>
 
 We have used a single ProtCNN model since it gave the best F1 score. We get an accuracy of 98. and f1 score of 0.987.
