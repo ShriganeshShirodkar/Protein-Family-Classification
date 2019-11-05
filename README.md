@@ -272,5 +272,4 @@ TO reduce the computation time, we consider only most common 1000 classes as it 
 
 [Using Deep Learning to Annotate the Protein Universe](https://www.biorxiv.org/content/10.1101/626507v2.full)
 <br>
-[AppliedaiCourse](https://www.appliedaicourse.com/)
-<br>
+
