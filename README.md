@@ -76,6 +76,17 @@ source : [Mean F Score](https://www.kaggle.com/wiki/MeanFScore/history/120331)
 
 F1-score is the harmonic mean of precision and recall.
 
+## Approach
+1. EDA:
+We try to find any important features and check for train, test distribution.
+2. Data Preprocessing: 
+We check for any duplicate data and nan values and also preprocess it.
+3. Feature Engineering:
+We try to engineer new features as well as implement the features given in research paper.
+4. Deep Learning Models:
+We implement the model which is proposed in the paper also we will implement LSTM as a benchmark as it already works well for sequence data.
+5. Future work and results
+
 ## Exploratory Data Analysis
 
 **1. Families with the most sequences**
@@ -171,7 +182,7 @@ Below is the architecture graph:
   <img src="Images/ProtCNN.png" width="600" height="400" title="Train Distibution">
 </p>
 
-We have used a single ProtCNN model since it gave the best F1 score. We get an accuracy of 98. and f1 score of 0.987.
+We have used a single ProtCNN model since it gave the best F1 score. We get an accuracy of 98.7 and f1 score of 0.987.
 
 Plot of Training vs Validation Loss:
 <p align="center">
@@ -240,6 +251,17 @@ Plot of Training vs Validation Loss:
 <p align="center">
   <img src="Images/result_pfam.png" width="700" title="Train ">
 </p>
+
+## Conclusion
+1. We do EDA and try to find any important features and check for train, test distribution and find Families with the most sequences and longest sequences.
+2. We then check for duplicate and null values and remove them from all train, test and dev dataset.
+TO reduce the computation time, we consider only most common 1000 classes as it covers 40% of the total train dataset, for dev and test data 40% of the data is covered  by 800 classes. We use this data for processing.
+3. The sequence contains only first letter of amino acid.We convert it into 3 letter representation and seperate it with a space.
+4. We use another featurization technique proposed in the paper.We will one hot encode the input sequence into L* 20 array such that each column represents one hot encoding of each amino acid and padding with zeroes, where L is the maximum length of the sequence.
+5. We use f1 score and accuracy as performance metric to compare the models as well.
+6. We apply LSTM, simple ANN and ProtCNN model given in the paper.
+7. We get an accuracy as 97.3 and 98.7 for LSTM and ProtCNN respectively.
+
 
 ### Future Work
 
